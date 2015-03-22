@@ -48,3 +48,19 @@ def the_main(img):
 	edgeimg = cv2.Sobel(gray, -1, 1,0)
 	Jopt = 0
 	Hopt = []
+	for t in range(10,100,10):
+		H = get_sky_boundary(edgeimg, t)
+		Jm = calcJm(img, H)
+		if Jopt < Jm:
+			Jopt = Jm
+			Hopt = H
+	return(Hopt)
+
+if __name__ == "__main__":
+	img = cv2.imread("E:\\tmp\\sky.jpg")
+	H = the_main(img)
+	for x in range(img.shape[1]):
+		y = H[x]
+		pt = (x,y)
+		cv2.circle(img, pt, 2, (1,0,0),2)
+	cv2.imwrite("E:\\tmp\\sky_result.jpg", img)
